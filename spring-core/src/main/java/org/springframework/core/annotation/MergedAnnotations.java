@@ -91,7 +91,7 @@ import org.springframework.lang.Nullable;
  *
  * <p>Different {@linkplain SearchStrategy search strategies} can be used to locate
  * related source elements that contain the annotations to be aggregated. For
- * example, {@link SearchStrategy#EXHAUSTIVE} will search both superclasses and
+ * example, {@link SearchStrategy#TYPE_HIERARCHY} will search both superclasses and
  * implemented interfaces.
  *
  * <p>From a {@link MergedAnnotations} instance you can either
@@ -428,8 +428,28 @@ public interface MergedAnnotations extends Iterable<MergedAnnotation<Annotation>
 		 * Perform a full search of all related elements, including those on any
 		 * superclasses or implemented interfaces. Superclass annotations do
 		 * not need to be meta-annotated with {@link Inherited @Inherited}.
+		 * @deprecated since 5.2.0.RC1 in favor of {@link #TYPE_HIERARCHY}.
 		 */
-		EXHAUSTIVE
+		@Deprecated
+		EXHAUSTIVE,
+
+		/**
+		 * Perform a full search of the entire type hierarchy, including
+		 * superclasses and implemented interfaces. Superclass annotations do
+		 * not need to be meta-annotated with {@link Inherited @Inherited}.
+		 */
+		TYPE_HIERARCHY,
+
+		/**
+		 * Perform a full search of the entire type hierarchy on the source
+		 * <em>and</em> any enclosing classes. This strategy is similar to
+		 * {@link #TYPE_HIERARCHY} except that {@link Class#getEnclosingClass()
+		 * enclosing classes} are also searched. Superclass annotations do not
+		 * need to be meta-annotated with {@link Inherited @Inherited}. When
+		 * searching a {@link Method} source, this strategy is identical to
+		 * {@link #TYPE_HIERARCHY}.
+		 */
+		TYPE_HIERARCHY_AND_ENCLOSING_CLASSES
 	}
 
 }

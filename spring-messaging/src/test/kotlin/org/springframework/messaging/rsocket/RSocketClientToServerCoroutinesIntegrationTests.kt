@@ -21,7 +21,7 @@ import io.rsocket.RSocketFactory
 import io.rsocket.frame.decoder.PayloadDecoder
 import io.rsocket.transport.netty.server.CloseableChannel
 import io.rsocket.transport.netty.server.TcpServerTransport
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -49,6 +49,7 @@ import java.time.Duration
  * @author Sebastien Deleuze
  * @author Rossen Stoyanchev
  */
+@ExperimentalCoroutinesApi
 class RSocketClientToServerCoroutinesIntegrationTests {
 
 	@Test
@@ -104,7 +105,7 @@ class RSocketClientToServerCoroutinesIntegrationTests {
 				.verify(Duration.ofSeconds(5))
 	}
 
-	@FlowPreview
+	@ExperimentalCoroutinesApi
 	@Controller
 	class ServerController {
 
@@ -159,7 +160,7 @@ class RSocketClientToServerCoroutinesIntegrationTests {
 	@Configuration
 	open class ServerConfig {
 
-		@FlowPreview
+		@ExperimentalCoroutinesApi
 		@Bean
 		open fun controller(): ServerController {
 			return ServerController()
@@ -201,7 +202,7 @@ class RSocketClientToServerCoroutinesIntegrationTests {
 			server = RSocketFactory.receive()
 					.addResponderPlugin(interceptor)
 					.frameDecoder(PayloadDecoder.ZERO_COPY)
-					.acceptor(context.getBean(RSocketMessageHandler::class.java).serverAcceptor())
+					.acceptor(context.getBean(RSocketMessageHandler::class.java).serverResponder())
 					.transport(TcpServerTransport.create("localhost", 7000))
 					.start()
 					.block()!!
